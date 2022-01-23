@@ -53,13 +53,13 @@ public class SMTPController {
     }
     
     // 임시 비밀번호 발급
-    @PostMapping(value = "/student/newpwd")
+    @PostMapping(value = "/newpwd/student")
     public ResponseEntity<Void> studentNewPwd(@RequestBody Map<String, Object> param) {
         if(smtpService.studentTempPassword((String) param.get("email")) == -1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(value = "/president/newpwd")
+    @PostMapping(value = "/newpwd/president")
     public ResponseEntity<Void> presidentNewPwd(@RequestBody Map<String, Object> param) {
         if(smtpService.presidentTempPassword((String) param.get("email")) == -1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
