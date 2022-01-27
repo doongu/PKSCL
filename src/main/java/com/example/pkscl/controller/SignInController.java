@@ -1,7 +1,11 @@
 package com.example.pkscl.controller;
 
+import java.lang.ProcessBuilder.Redirect;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.example.pkscl.service.SignInService;
 
@@ -10,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,9 +28,10 @@ public class SignInController {
     }
 
     @PostMapping(value = "/login/student")
-    public ResponseEntity<LinkedHashMap<String, Object>> studentSignIn(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<LinkedHashMap<String, Object>> studentSignIn(@RequestBody Map<String, Object> body, HttpServletRequest request){
         String email = (String) body.get("email");
         String password = (String) body.get("password");
+
 
         if (email == null || password == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -45,12 +51,17 @@ public class SignInController {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
         result.put("position", "student");
         result.put("sclData", sclData);
-        
+
+        // 세션
+        HttpSession session = request.getSession();
+        session.setAttribute("position", "student");
+        session.setAttribute("email", email);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(value = "/login/president")
-    public ResponseEntity<LinkedHashMap<String, Object>> presidentSignIn(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<LinkedHashMap<String, Object>> presidentSignIn(@RequestBody Map<String, Object> body, HttpServletRequest request) {
         String email = (String) body.get("email");
         String password = (String) body.get("password");
 
@@ -72,16 +83,22 @@ public class SignInController {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
         result.put("position", "president");
         result.put("sclData", sclData);
+
+        // 세션
+        HttpSession session = request.getSession();
+        session.setAttribute("position", "president");
+        session.setAttribute("email", email);
         
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
     @PostMapping(value = "/login/admin")
-    public ResponseEntity<LinkedHashMap<String, Object>> adminSignIn(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<LinkedHashMap<String, Object>> adminSignIn(@RequestBody Map<String, Object> body, HttpServletRequest request) {
         String id = (String) body.get("id");
         String password = (String) body.get("password");
 
-        if (id == null || password == null) {
+        if (id == null || password == null) 
+        {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -89,6 +106,23 @@ public class SignInController {
 
         if(!match) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
+        HttpSession session = request.getSession();
+        session.setAttribute("position", "admin");
+        session.setAttribute("id", id);
+
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @PostMapping("/logout") 
+    public ResponseEntity<Void> logout(HttpServletRequest request) 
+    { 
+        HttpSession session = request.getSession(false);
+        if (session != null) 
+        {        
+            session.invalidate();
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+        // 문제: 로그아웃은 되나 반환값이 404가 나옴
     }
 }

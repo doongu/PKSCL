@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Navbar, Container } from 'react-bootstrap';
-import './ManagementPage.css';
+import './css/ManagementPage.css';
 import axios from 'axios';
 import { Link, Route, Switch, useHistory } from 'react-router-dom';
 
-function ManagementPage() {
+function ManagementPage(props) {
     const history = useHistory();
     const [waiting, setWaiting] = useState([
         {
