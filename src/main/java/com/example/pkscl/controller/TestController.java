@@ -15,6 +15,8 @@ public class TestController {
         HttpSession session = request.getSession(false);
         String email = (String) session.getAttribute("email");
         String position = (String) session.getAttribute("position");
-        return "email: " + email + ", position: " + position;
+        String majorNumber = (String) session.getAttribute("majorNumber");
+        String status = (String) session.getAttribute("status");
+        return "email: " + email + ", position: " + position + ", majorNumber: " + majorNumber + ", status: " + status;
     }
 }

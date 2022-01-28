@@ -6,10 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.example.pkscl.repository.AdminRepository;
-import com.example.pkscl.repository.PresidentRepository;
-import com.example.pkscl.repository.StudentRepository;
-
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +26,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         if (session == null || session.getAttribute("position") == null || session.getAttribute("email") == null) {
             log.info("미인증 사용자 요청");
             
-            // 403 forbidden
-            ((HttpServletResponse) response).setStatus(HttpURLConnection.HTTP_FORBIDDEN);
+            // 401 Unauthorized 응답
+            response.setStatus(HttpURLConnection.HTTP_UNAUTHORIZED);
             
             // 로그인 페이지로 이동
             response.sendRedirect("/");

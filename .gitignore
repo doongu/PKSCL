@@ -37,6 +37,7 @@ out/
 .vscode/
 
 ### application properties###
-../build6/src/main/resources/application.properties
+src/main/resources/application.properties
 src/main/resources/static/certfiles
 certfiles/
+frontend/
